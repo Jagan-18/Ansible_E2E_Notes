@@ -1,0 +1,8 @@
+plugin: amazon.aws.aws_ec2
+region:
+  - us-east-1
+filters:
+  instance-state-name: running # Only include instances that are running
+group_by:
+  tags.Name: # Group instances by the value of the "Name" tag
+    - web

@@ -1,0 +1,10 @@
+MONGODB_HOST: mongodb.jagando.online
+REDIS_HOST: redis.jagando.online
+MYSQL_HOST: mysql.jagando.online
+RABBITMQ_HOST: rabbitmq.jagando.online
+CATALOGUE_HOST: catalogue.jagando.online
+USER_HOST: user.jagando.online
+CART_HOST: cart.jagando.online
+SHIPPING_HOST: shipping.jagando.online
+PAYMENT_HOST: payment.jagando.online
+DISPATCH_HOST: dispatch.jagando.online

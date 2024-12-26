@@ -1,0 +1,24 @@
+- name: app setup
+  ansible.builtin.import_roles:
+    name: common
+    tasks_from: app-setup
+
+- name: node js
+  ansible.builtin.import_roles:
+    name: common
+    tasks_from: nodejs
+
+- name: mongodb setup
+  ansible.builtin.import_roles:
+    name: common
+    tasks_from: mongodb-setup
+
+- name: Setup catalogue service
+  ansible.builtin.import_roles:
+    name: common
+    tasks_from: systemd
+
+- name: deployment
+  ansible.builtin.import_roles:
+    name: common
+    tasks_from: deployment

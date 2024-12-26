@@ -1,0 +1,14 @@
+- name: loops
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: print persons
+      ansible.builtin.package:
+        name: " {{item}}"
+        state: present # item is a default ketword
+      loop:
+        - git
+        - tree
+        - mysal
+        - postfix
+ 

@@ -1,0 +1,77 @@
+- name: Install shipping component
+  hosts: shipping
+  become: yes
+  vars:
+    mysql_password:
+  tasks:
+    - name: install maven
+      ansible.builtin.dnf:
+        name: maven
+        state: present
+    - name: Create roboshop user
+      ansible.builtin.user:
+        name: roboshop
+
+    - name: Recursively remove app directory
+      ansible.builting.file:
+        path: /app
+        state: absent
+
+    - name: creat app directory
+      ansible.builting.file:
+        path: /app
+        state: directory
+
+    - name: download Shipping application
+      ansible.builtin.get_url:
+        url: https://roboshop-builds.s3.amazonaws.com/shipping.zip
+        dest: /tmp
+
+    - name: extract Shipping application
+      ansible.builtin.unarchive:
+        src: /tmp/Shipping.zip
+        dest: /app
+        remote_src: yes
+
+    - name: Install dependencies
+      ansible.builtin.command: mvn clean package
+      args:
+        chdir: /app
+
+    - name: rename jar file
+      ansible.builtin.command: mv target/shipping-1.0.jar shipping.jar
+      args:
+        chdir: /app
+
+    - name: copy shipping service
+      ansible.builtin.copy:
+        src: shipping.service
+        dest: /etc/systemd/system/shipping.service
+
+    - name: daemon-reload and start
+      ansible.builtin.systemd_service:
+        daemon_reload: true
+
+    - name: Install Mysql clinet
+      ansible.builtin.dnf:
+        name: mysql
+        state: present
+
+    - name: Check if cities schema exists
+      ansible.builtin.command:
+        cmd: mysql -h mysql.jagando.online -uroot -p{{ mysql_password }} -sN -e "SELECT COUNT(*) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'cities';"
+        register: schema
+
+    - name: print output
+      ansible.builtin.debug:
+        msg: "schema output: {{schema}}"
+
+    - name: Load cities data
+      ansible.builtin.shell: mysql -h mysql.jagando.online -uroot -p{{mysql_password}} < /app/schema/shipping.sql
+      when: schema.stdout != "1"
+
+    - name: start and enable Shipping
+      ansible.builtin.service:
+        name: shipping
+        state: restarted
+        enabled: yes

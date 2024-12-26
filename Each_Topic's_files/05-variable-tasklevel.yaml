@@ -1,0 +1,20 @@
+# TASK Level Variables.
+- name: variable for PLAY Level
+  hosts: localhost
+  vars:
+    Course: "ansible"
+    Platform: "JoinDevops"
+    Duration: "2.5 months"
+
+  tasks:
+    - name: check variables
+      vars:
+        Course: "Devops with AWS" # This overrides the play-level variable for this task only
+      ansible.builtin.debug:
+        msg: "Hi, I'm learning {{ Course }}, watching on {{ Platform }}, website overall Course {{ Duration }}"
+
+    - name: another task
+      ansible.builtin.debug:
+        msg: "Course is {{ Course }}" # This will use the play-level 'Course' variable because it's not overridden here.
+
+#### Task-level variables do override play-level variables for the specific task they are defined in. Once the task execution finishes, the play-level variable takes effect again unless another task overrides it.

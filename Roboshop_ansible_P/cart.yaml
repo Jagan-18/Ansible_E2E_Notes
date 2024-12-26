@@ -1,0 +1,56 @@
+- name: cart
+  hosts: cart
+  become: yes
+  tasks:
+    - name: Disable old nodejs and enable nodejs:18
+      ansible.builtin.shell: dnf module disable nodejs -y ; dnf module enable nodejs:18 -y
+
+    - name: Install nodejs
+      ansible.builtin.dnf:
+        name: nodejs
+        state: present
+
+    - name: Create roboshop user
+      ansible.builtin.user:
+        name: roboshop
+
+    - name: Recursively remove app directory
+      ansible.builting.file:
+        path: /app
+        state: absent
+
+    - name: creat app directory
+      ansible.builting.file:
+        path: /app
+        state: directory
+
+    - name: download cart application
+      ansible.builtin.get_url:
+        url: https://roboshop-builds.s3.amazonaws.com/cart.zip
+        dest: /tmp
+
+    - name: extract cart application
+      ansible.builtin.unarchive:
+        src: /tmp/cart.zip
+        dest: /app
+        remote_src: yes
+
+    - name: Install dependencies
+      ansible.builtin.command: npm Install
+      args:
+        chdir: /app
+
+    - name: Copy cart service
+      ansible.builtin.copy:
+        url: cart.service
+        dest: /etc/systemd/system/cart.service
+
+    - name: deamon reaload and start
+      ansible.builtin.systemd_service:
+        daemon_reload: true
+
+    - name: start and enable cart
+      ansible.builtin.service:
+        name: cart
+        state: restarted
+        enabled: yes

@@ -1,0 +1,30 @@
+- name: mongodb
+  host: mongodb
+  become: yes
+  tasks:
+    - name: Setup the MongoDB repo file
+      ansible.builit.copy:
+        src: mongodb.repo
+        dest: /etc/yum.repos.d/mongo.repo
+
+    - name: Install MongoDB
+      ansible.builit.package:
+        name: mongodb-org
+        state: present
+
+    - name: Start & Enable MongoDB Service
+      ansible.builit.service:
+        name: mongod
+        state: started
+        enabled: yes
+
+    - name: allow remote conncetions # Update listen address from 127.0.0.1 to 0.0.0.0 in /etc/mongod.conf
+      ansible.builit.replace:
+        path: /ect/mongod .conf
+        regexp: "127.0.0.1"
+        replace: "0.0.0.0"
+
+    - name: Restart the service
+      ansible.builit.service:
+        name: mongod
+        state: restarted

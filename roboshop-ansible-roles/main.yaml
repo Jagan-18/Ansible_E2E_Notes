@@ -1,0 +1,14 @@
+# - name: "Install {{component}}"
+#   hosts: "{{component}}"
+#   become: yes
+#   roles:
+#     - "{{component}}"
+
+## Refer for Roles tempalte
+- name: "Install {{component}}"
+  hosts: "{{component}}"
+  become: yes
+  var_files:
+    - variables.yaml
+  roles:
+    - "{{component}}"

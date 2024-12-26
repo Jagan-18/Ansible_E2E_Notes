@@ -1,0 +1,6 @@
+- name: variable for PLAY Level
+  hosts: locahost
+  tasks:
+    - name: check variables
+      ansible.builtin.debug:
+        msg: "Helle {{PERSON}}, good {{WISHES}}"

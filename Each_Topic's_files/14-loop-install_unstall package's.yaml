@@ -1,0 +1,13 @@
+- name: loops
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Install or UnInstall package's
+      ansible.builtin.package:
+        name: " {{item.name}}"
+        state: " {{item.state}}" #item is a default ketword
+      loop:
+        - { name: "git", state: "present" } #item
+        - { name: "tree", state: "absent" }
+        - { name: "mysql", state: "absent" }
+        - { name: "nginx", state: "present" }

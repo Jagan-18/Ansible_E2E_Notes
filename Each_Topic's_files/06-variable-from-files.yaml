@@ -1,0 +1,8 @@
+- name: variable for PLAY Level
+  hosts: localhost
+  vars_files:
+    - variable.yaml # Ensure this file exists and is in the same directory or give the full path
+  tasks:
+    - name: check variables
+      ansible.builtin.debug:
+        msg: "Hi, I'm learning {{ Course }}, watching on {{ Platform }}, website overall Course {{ Duration }}"

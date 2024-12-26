@@ -1,0 +1,7 @@
+# Play Level Variables.
+- name: variable for PLAY Level
+  hosts: locahost
+  tasks:
+    - name: check variables
+      ansible.builtin.debug:
+        msg: "Hi I'm learing {{Course}}, watching on {{Platform}}, website overall Course {{Duration}}"
